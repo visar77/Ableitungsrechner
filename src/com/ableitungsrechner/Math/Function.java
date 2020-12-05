@@ -1,11 +1,11 @@
-package com.company;
+package com.ableitungsrechner.Math;
 
 import java.util.*;
 
-public class Graph {
+public class Function {
     private String function;
     private final String ONLY_WORKS_PARTIALLY = "(?<=[+/*^()])|(?=[+/*^()-])|(?<=-(?<!((?:[*/(^+-])|(?:[sin(]|[cos(]|[tan(]) \\()-))";
-    public Graph(String function) {
+    public Function(String function) {
         this.function = function;
     }
 

@@ -1,4 +1,6 @@
-package com.company;
+package com.ableitungsrechner;
+
+import com.ableitungsrechner.Math.Function;
 
 import java.util.Scanner;
 
@@ -8,7 +10,7 @@ public class Main {
 
         while(true) {
             System.out.println("Gib die Gleichung an:");
-            Graph g = new Graph(in.next());
+            Function g = new Function(in.next());
             System.out.println("Ergebnis: "+g.getResult());
         }
     }
