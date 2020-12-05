@@ -11,8 +11,8 @@ public class Function {
 
     public String getDerivative() { return null; }
     private List<String> getArguments() {
-        function = function.replaceAll("-","+-1*");
-        String[] split = function.split("((?<=[+/*^()]|sin|cos|tan)|(?=[+/*^()]|sin|cos|tan))");
+        function = function.replaceAll("-(?! )","+-1*");
+        String[] split = function.split("((?<=[+/*^()]|-sin|sin|-cos|cos|-tan|tan)|(?=[+/*^()]|-sin|sin|-cos|cos|-tan|tan))");
 
         List<String> args = new ArrayList<>(Arrays.asList(split));
         System.out.println("Splitten der Funktion: "+args);
@@ -27,25 +27,30 @@ public class Function {
     public void Trigonometry(ArrayList<String> args) {
         int index = 0;
         do{
+            double tempresult;
             switch (args.get(index)) {
-                case "sin" -> {
-                    double tempresult = Math.sin(parse(args.get(index + 1)));
+                case "-sin" :
+                case "sin" :
+                    tempresult = (args.get(index).contains("-") ? -1 : 1)  * Math.sin(parse(args.get(index + 1)));
                     args.remove(index);
                     args.set(index, Double.toString(tempresult));
                     System.out.println("sin: " + args);
-                }
-                case "cos" -> {
-                    double tempresult = Math.cos(parse(args.get(index + 1)));
+                    break;
+                case "-cos":
+                case "cos" :
+                    tempresult = (args.get(index).contains("-") ? -1 : 1)  * Math.cos(parse(args.get(index + 1)));
                     args.remove(index);
                     args.set(index, Double.toString(tempresult));
                     System.out.println("cos: " + args);
-                }
-                case "tan" -> {
-                    double tempresult = Math.tan(parse(args.get(index + 1)));
+                    break;
+                case "-tan":
+                case "tan" :
+                    tempresult = (args.get(index).contains("-") ? -1 : 1)  * Math.tan(parse(args.get(index + 1)));
                     args.remove(index);
                     args.set(index, Double.toString(tempresult));
                     System.out.println("tan: " + args);
-                }
+                    break;
+
             }
             index++;
         }while(index != args.size());
@@ -94,12 +99,16 @@ public class Function {
         int index=0;
         do {
             if(args.get(index).equals("+")) {
-                double tempresult = parse(args.get(index - 1)) + parse(args.get(index + 1));
-                args.remove(index);
-                args.remove(index);
-                args.set(index - 1, Double.toString(tempresult));
-                index = 0;
-                System.out.println("+: " + args);
+                try {
+                    double tempresult = parse(args.get(index - 1)) + parse(args.get(index + 1));
+                    args.remove(index);
+                    args.remove(index);
+                    args.set(index - 1, Double.toString(tempresult));
+                    index = 0;
+                    System.out.println("+: " + args);
+                }catch(Exception e) {
+                    args.remove(index);
+                }
             }else if(args.get(index).equals("-")) {
                 double tempresult = parse(args.get(index-1)) - parse(args.get(index + 1));
                 args.remove(index);
