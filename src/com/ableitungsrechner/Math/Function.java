@@ -29,28 +29,24 @@ public class Function {
         do{
             double tempresult;
             switch (args.get(index)) {
-                case "-sin" :
-                case "sin" :
-                    tempresult = (args.get(index).contains("-") ? -1 : 1)  * Math.sin(parse(args.get(index + 1)));
+                case "-sin", "sin" -> {
+                    tempresult = (args.get(index).contains("-") ? -1 : 1) * Math.sin(parse(args.get(index + 1)));
                     args.remove(index);
                     args.set(index, Double.toString(tempresult));
                     System.out.println("sin: " + args);
-                    break;
-                case "-cos":
-                case "cos" :
-                    tempresult = (args.get(index).contains("-") ? -1 : 1)  * Math.cos(parse(args.get(index + 1)));
+                }
+                case "-cos", "cos" -> {
+                    tempresult = (args.get(index).contains("-") ? -1 : 1) * Math.cos(parse(args.get(index + 1)));
                     args.remove(index);
                     args.set(index, Double.toString(tempresult));
                     System.out.println("cos: " + args);
-                    break;
-                case "-tan":
-                case "tan" :
-                    tempresult = (args.get(index).contains("-") ? -1 : 1)  * Math.tan(parse(args.get(index + 1)));
+                }
+                case "-tan", "tan" -> {
+                    tempresult = (args.get(index).contains("-") ? -1 : 1) * Math.tan(parse(args.get(index + 1)));
                     args.remove(index);
                     args.set(index, Double.toString(tempresult));
                     System.out.println("tan: " + args);
-                    break;
-
+                }
             }
             index++;
         }while(index != args.size());
