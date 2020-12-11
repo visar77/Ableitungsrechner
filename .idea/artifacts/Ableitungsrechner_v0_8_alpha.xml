@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Ableitungsrechner v0.8-alpha">
+    <output-path>$PROJECT_DIR$/out/artifacts/Ableitungsrechner_v0_8_alpha</output-path>
+    <root id="archive" name="Ableitungsrechner v0.8-alpha.jar" />
+  </artifact>
+</component>
