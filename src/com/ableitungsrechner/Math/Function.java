@@ -19,9 +19,11 @@ public class Function {
         List<String> derivativeList = new ArrayList<>();
         HashMap<Integer,Double> powerofeachX = new HashMap<>();
         findEachpowerofX(args,powerofeachX);
-
         ArrayList<String> newargs = new ArrayList<>(args);
-        args = AdditionResult(newargs,powerofeachX);
+        args = ProductResult(newargs,powerofeachX);
+        findEachpowerofX(args,powerofeachX);
+        ArrayList<String> newargs2 = new ArrayList<>(args);
+        args = AdditionResult(newargs2,powerofeachX);
         findEachpowerofX(args,powerofeachX);
 
 
@@ -222,29 +224,67 @@ public class Function {
         }
         return args;
     }
-    private void ProductResult (ArrayList<String> args) {
+    private List<String> ProductResult (ArrayList<String> args, HashMap<Integer,Double> powerofeachX) {
         int index = 0;
-        do {
-            switch (args.get(index)) {
-                case "*" -> {
-                    double tempresult = parse(args.get(index-1)) * parse(args.get(index+1));
+        if(variable) {
+            do {
+                if(args.get(index).equals("*") || args.get(index).equals("/")) {
+                    boolean mal = args.get(index).equals("*");
+                    double faktor1;
+                    double faktor2 = parse(findVorfaktor(args.get(index+1)));
+                    boolean potenz1;
+                    if (index - 2 >= 0 && args.get(index - 2).equals("^")) {
+                        faktor1 = parse(findVorfaktor(args.get(index-3)));
+                        potenz1 = true;
+                    }else {
+                        faktor1 = parse(findVorfaktor(args.get(index-1)));
+                        potenz1 = false;
+                    }
+                    double tempresult = faktor1*((mal) ? 1*faktor2 : 1/faktor2);
+                    double potenz = powerofeachX.get(index- ((potenz1) ? 3 : 1))+((mal) ? powerofeachX.get(index+1) : -powerofeachX.get(index+1));
+                    args.set(index - (potenz1 ? 3 : 1), (tempresult == 0) ? String.valueOf((0d)) : ((potenz == 0) ? String.valueOf(tempresult) : tempresult + "x"));
+                    System.out.println(args);
+                    do {
+                        args.remove(index);
+                        System.out.println(args);
+                    }while(!(index+1 == args.size() || args.get(index+1).matches("[+-/*]|[sin(]|[cos(]|[tan(]")));
                     args.remove(index);
-                    args.remove(index);
-                    args.set(index-1,Double.toString(tempresult));
+                    System.out.println(args);
+                    System.out.println("before" + args);
+                    if(potenz1) args.set(index-1,String.valueOf(potenz));
+                    else if(potenz != 1){
+                        args.add(index,"^");
+                        args.add(index+1,String.valueOf(potenz));
+                    }
+                    System.out.println(args);
+                    findEachpowerofX(args,powerofeachX);
                     index = 0;
-                    System.out.println("*: "+args);
                 }
-                case "/" -> {
-                    double tempresult = parse(args.get(index-1)) / parse(args.get(index+1));
-                    args.remove(index);
-                    args.remove(index);
-                    args.set(index-1,Double.toString(tempresult));
-                    index = 0;
-                    System.out.println("/: "+args);
+            }while(++index != args.size());
+        }else {
+            do {
+                switch (args.get(index)) {
+                    case "*" -> {
+                        double tempresult = parse(args.get(index - 1)) * parse(args.get(index + 1));
+                        args.remove(index);
+                        args.remove(index);
+                        args.set(index - 1, Double.toString(tempresult));
+                        index = 0;
+                        System.out.println("*: " + args);
+                    }
+                    case "/" -> {
+                        double tempresult = parse(args.get(index - 1)) / parse(args.get(index + 1));
+                        args.remove(index);
+                        args.remove(index);
+                        args.set(index - 1, Double.toString(tempresult));
+                        index = 0;
+                        System.out.println("/: " + args);
+                    }
                 }
-            }
-            index++;
-        } while (index != args.size());
+                index++;
+            } while (index != args.size());
+        }
+        return args;
     }
     private double OperationResult(List<String> list, int pos1, int pos2) {
         //clonen, da man eine subListe nicht verändern kann
@@ -256,7 +296,7 @@ public class Function {
         PowerResult(args);
         System.out.println("Nach Potenzrechnung: "+args);
         //System.out.println("Vor Punkt vor Strich: "+args);
-        ProductResult(args);
+        ProductResult(args,null);
         System.out.println("Nach Punkt vor Strich: "+args);
         //System.out.println("Vor +/-: "+args);
         AdditionResult(args,null);
@@ -268,6 +308,7 @@ public class Function {
     private double parse(String s) { return Double.parseDouble(s); }
     public String findVorfaktor(String s) {
         s = s.replace("x","");
+        if(s.equals("")) s = "1";
         return s;
     }
     private void findEachpowerofX(List<String> args,HashMap<Integer,Double> powerofeachX) {
