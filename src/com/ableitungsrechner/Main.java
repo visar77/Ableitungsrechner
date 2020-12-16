@@ -11,7 +11,7 @@ public class Main {
         while(true) {
             System.out.println("Gib die Gleichung an:");
             Function g = new Function(in.next());
-            System.out.println("Ergebnis: "+g.getDerivative());
+            System.out.println("Ergebnis: "+g.getResult());
         }
     }
 }
