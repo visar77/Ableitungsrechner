@@ -7,7 +7,7 @@ This is a solo project of mine therefore I am the one designing, writing and cod
 ## Long Term Goals
 * A fast and friendly to use derivative calculator 
 * The addition of a plotter and a synchronized UI
-* A detailed documentation of the inner workings of the calculator (mostly per code comments)
+* A detailed documentation of the inner workings of the calculator (mostly via code comments)
 * Impressing my old physics teacher and my shunning and presumptuous friend
 
 ## Short Term Goals
