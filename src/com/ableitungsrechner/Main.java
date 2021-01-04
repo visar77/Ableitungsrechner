@@ -1,17 +1,14 @@
 package com.ableitungsrechner;
 
-import com.ableitungsrechner.Math.Function;
+import com.ableitungsrechner.GUI.Window;
 
-import java.util.Scanner;
+import javax.swing.*;
 
 public class Main {
-    private static final Scanner in = new Scanner(System.in);
+
     public static void main(String[] args) {
 
-        while(true) {
-            System.out.println("Gib die Gleichung an:");
-            Function g = new Function(in.next());
-            System.out.println("Ergebnis: "+g.getResult());
-        }
+        SwingUtilities.invokeLater(() -> new Window("Visars Ableitungsrechner"));
     }
+
 }
