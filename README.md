@@ -13,4 +13,10 @@ This is a solo project of mine therefore I am the one designing, writing and cod
 ## Short Term Goals
 * Adding trigonomical functions and the use of non-integer exponents for clauses
 * Improving GUI
+* Simplyfication of fractions such as (x+1)/(x+1) to be 1
 * Adding Step-by-Step
+
+### Known Bugs
+* Dividing by 0 is "possible" (x)/(2x-2x) => (x)/(0)
+* Fractions in which the numerator/dividend or the denominator/divisor is a fraction itself
+* Non-integer powers for clauses e.g. (x+1)^0.5 and negative powers for fractions ((x+1)/(x-1))^-3 because this will create a new fractions with a divisor/denominator as a fraction
