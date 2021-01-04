@@ -11,6 +11,6 @@ This is a solo project of mine therefore I am the one designing, writing and cod
 * Impressing my old physics teacher and my shunning and presumptuous friend
 
 ## Short Term Goals
-* Adding trigonomical functions and the use of non-integer exponent for clauses
+* Adding trigonomical functions and the use of non-integer exponents for clauses
 * Improving GUI
 * Adding Step-by-Step
