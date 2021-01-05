@@ -12,11 +12,11 @@ public class Function {
         this.function = function;
         if(function.contains("x")) variable = true;
     }
-    public String getDerivative() {
+    public String getDerivative() throws DividingbyNullException{
         List<String> args = getArguments();
         return getDerivative(args);
     }
-    public String  getResult() {
+    public String  getResult() throws DividingbyNullException {
         List<String> args = getArguments();
         args = ClauseResultX(args);
         StringBuilder argsbuild = new StringBuilder();
@@ -93,7 +93,7 @@ public class Function {
             }
         }
     }
-    public String getDerivative(List<String> args) {
+    public String getDerivative(List<String> args) throws DividingbyNullException {
 
         HashMap<Integer,Double> powerofeachX = new HashMap<>();
         args = ClauseResultX(args);
@@ -122,7 +122,7 @@ public class Function {
         System.out.println(fx + derivative);
         return fx+derivative;
     }
-    public List<String> QuotientRuleDerivative(List<String> derivative) {
+    public List<String> QuotientRuleDerivative(List<String> derivative) throws DividingbyNullException {
         //To explain all of this in detail would be too much to handle (because it sure was for me)
         //But in summary:
         //The program finds the fraction and creates two lists : the dividend and the divisor
@@ -202,7 +202,7 @@ public class Function {
         }
         return derivative;
     }
-    public List<String> ClauseResultX(List<String> args) {
+    public List<String> ClauseResultX(List<String> args) throws DividingbyNullException {
         int index = 0;
         args.add(0,"(");
         args.add(args.size() ,")");
@@ -259,7 +259,7 @@ public class Function {
 
         return args;
     }
-    private List<String> OperationResultX(List<String> args, HashMap<Integer,Double> powerofeachX) {
+    private List<String> OperationResultX(List<String> args, HashMap<Integer,Double> powerofeachX) throws DividingbyNullException {
         //cloning because you can't edit sublists
         Trigonometry(args);
 
@@ -375,122 +375,82 @@ public class Function {
         }while(++index < args.size());
     }
 
-    private void ProductResult (List<String> args, HashMap<Integer,Double> powerofeachX){
+    private void ProductResult (List<String> args, HashMap<Integer,Double> powerofeachX) throws DividingbyNullException {
         int index = 0;
 
             do {
-                if(args.get(index).equals("*")) {
+                if(args.get(index).matches("[*/]")) {
                     boolean mal = args.get(index).equals("*");
-                    boolean exponent = index - 2 >= 0 && args.get(index - 2).equals("^"); // checks if the first factor has an exponent bigger than 1
-                    boolean exponent2 = index + 2 <= args.size()-1 && args.get(index + 2).equals("^"); // checks if the second factor has an exponent bigger than 1
                     List<String> list = new ArrayList<>();
-                    List<String> list2 = new ArrayList<>();
-                    int counter = 2, firstclausepos = index-(exponent ? 3 : 1) , secondclausepos = index+(exponent2 ? 3 : 1);
-                    if(index > 0 && args.get(index-1).equals(")")) {
-                        int amountoffirstclauses = 0;
-                        while (!(amountoffirstclauses == 0 && args.get(index - counter).equals("("))) {
-                            if(args.get(index-counter).equals("(")) amountoffirstclauses++;
-                            else if(args.get(index-counter).equals(")")) amountoffirstclauses--;
-                            list.add(args.get(index - counter));
+                    int counter = 2;
+                    int amountoffirstclauses = 0;
+                    if(args.get(index+1).equals("(")) {
+                        while (!(amountoffirstclauses == 0 && args.get(index + counter).equals(")"))) {
+                            if (args.get(index + counter).equals("(")) amountoffirstclauses++;
+                            else if (args.get(index + counter).equals(")")) amountoffirstclauses--;
+                            list.add(args.get(index + counter));
                             counter++;
                         }
-                        firstclausepos = index-counter;
-                        Collections.reverse(list);
-                        counter = 2;
                     }else {
-                        if(exponent) {
-                            list.add(args.get(index-3));
-                            list.add(args.get(index-2));
-                            list.add(args.get(index-1));
-                        }else list.add(args.get(index-1));
-                    }
-
-                    if(index < args.size()-1 && args.get(index+1).equals("(")) {
-                        int amountoffirstclauses = 0;
-                        while(!(amountoffirstclauses == 0 && args.get(index+counter).equals(")"))) {
-                            if(args.get(index+counter).equals("(")) amountoffirstclauses++;
-                            else if(args.get(index+counter).equals(")")) amountoffirstclauses--;
-                            list2.add(args.get(index + counter));
-                            counter++;
-                        }
-                        secondclausepos = index+counter;
-                    }else {
-                        list2.add(args.get(index+1));
-                        if(exponent2) {
-                            list2.add(args.get(index+2));
-                            list2.add(args.get(index+3));
-                        }
-                    }
-
-                    List<String> result = productResult(mal, list, list2);
-                    result = ClauseResultX(result);
-                    boolean clauseneeded =  (firstclausepos-1 > 0 && args.get(firstclausepos-1).matches("[*/^]")) || ( secondclausepos+1 < args.size() && args.get(secondclausepos+1).matches("[*/^]"));
-                    //adding of the clause and removing process
-
-                    args.subList(firstclausepos, secondclausepos+1).clear();
-                    if(clauseneeded) {
-                        args.add(firstclausepos ,")");
-                        args.add(firstclausepos,"(");
-                    }
-                    //adding process
-                    args.addAll(firstclausepos + (clauseneeded ? 1 : 0),result);
-                    index = 0;
-                    System.out.println("* or / :" + args);
-                    findEachpowerofX(args,powerofeachX);
-                }else if(args.get(index).equals("/")){
-
-                    if(!args.get(index+1).equals("(")) {
-
-                        List<String> divisor = new ArrayList<>();
-                        boolean exponent = index - 2 >= 0 && args.get(index - 2).equals("^");
                         boolean exponent2 = index + 2 <= args.size() - 1 && args.get(index + 2).equals("^");
-                        int counter = 2, firstclausepos = index - (exponent ? 3 : 1), secondclausepos = index + (exponent2 ? 3 : 1);
-                        divisor.add(args.get(index + 1));
-                        if (exponent2) {
-                            divisor.add(args.get(index + 2));
-                            divisor.add(args.get(index + 3));
+                        if(exponent2) {
+                            list.add(args.get(index+1));
+                            list.add(args.get(index+2));
+                            list.add(args.get(index+3));
+                        }else list.add(args.get(index+1));
+                        counter = exponent2 ? 3 : 1;
+                    }
+                    System.out.println("list " + list);
+                    int closingClause = index+counter;
+                    List<String> list2 = new ArrayList<>();
+                    counter = 2;
+                    if(args.get(index-1).equals(")")) {
+                        while (!(amountoffirstclauses == 0 && args.get(index - counter).equals("("))) {
+                            if (args.get(index - counter).equals("(")) amountoffirstclauses++;
+                            else if (args.get(index - counter).equals(")")) amountoffirstclauses--;
+                            list2.add(args.get(index - counter));
+                            counter++;
                         }
-                        List<String> dividend = new ArrayList<>();
-                        if (index > 0 && args.get(index - 1).equals(")")) {
-                            int amountoffirstclauses = 0;
-                            while (!(amountoffirstclauses == 0 && args.get(index - counter).equals("("))) {
-                                if (args.get(index - counter).equals("(")) amountoffirstclauses++;
-                                else if (args.get(index - counter).equals(")")) amountoffirstclauses--;
-                                dividend.add(args.get(index - counter));
-                                counter++;
-                            }
-                            firstclausepos = index - counter;
-                            Collections.reverse(dividend);
-                        } else {
-                            if (exponent) {
-                                dividend.add(args.get(index - 3));
-                                dividend.add(args.get(index - 2));
-                                dividend.add(args.get(index - 1));
-                            } else dividend.add(args.get(index - 1));
-                        }
-
-                        List<String> result = productResult(false,dividend,divisor);
-                        result = ClauseResultX(result);
-                        boolean clauseneeded =  (firstclausepos-1 > 0 && args.get(firstclausepos-1).matches("[*/^]")) || ( secondclausepos+1 < args.size() && args.get(secondclausepos+1).matches("[*/^]"));
-                        //adding of the clause and removing process
-
-                        args.subList(firstclausepos, secondclausepos+1).clear();
+                        Collections.reverse(list2);
+                    }else {
+                        boolean exponent = index-2 > 0 && args.get(index-2).equals("^");
+                        if(exponent) {
+                            list2.add(args.get(index-3));
+                            list2.add(args.get(index-2));
+                            list2.add(args.get(index-1));
+                        }else list2.add(args.get(index-1));
+                        counter = exponent ? 3 : 1;
+                    }
+                    System.out.println("list2 " + list2);
+                    int openingClause = index-counter;
+                    if(list2.size() == 1 && parse(findVorfaktor(list2.get(0))) == 0d) {
+                        args.subList(openingClause,closingClause+1).clear();
+                        args.add(openingClause,"0");
+                        index = -1;
+                        continue;
+                    }
+                    if(!mal && list.size() == 1 && parse(findVorfaktor(list.get(0))) == 0d) {
+                        throw new DividingbyNullException("You can't divide by null!");
+                    }
+                    if(mal || (list.size() == 1 || (list.size() == 3 && list.contains("^")))) {
+                        List<String> result = productResult(mal, list2, list);
+                        boolean clauseneeded =  (openingClause-1 > 0 && args.get(openingClause-1).matches("[*/^]")) || ( closingClause+1 < args.size() && args.get(closingClause+1).matches("[*/^]"));
+                        args.subList(openingClause,closingClause+1).clear();
                         if(clauseneeded) {
-                            args.add(firstclausepos ,")");
-                            args.add(firstclausepos,"(");
+                            args.addAll(openingClause,Arrays.asList("(",")"));
                         }
-                        //adding process
-                        args.addAll(firstclausepos + (clauseneeded ? 1 : 0),result);
-
-                        System.out.println("* or / :" + args);
-                        findEachpowerofX(args,powerofeachX);
+                        System.out.println("args " + args);
+                        args.addAll(openingClause + (clauseneeded ? 1 : 0),result);
+                        System.out.println("args " + args);
+                    }else {
+                        index = closingClause;
                     }
 
                 }
             }while(++index < args.size());
     }
 
-    private void AdditionResult(List<String> args, HashMap<Integer,Double> powerofeachX) {
+    private void AdditionResult(List<String> args, HashMap<Integer,Double> powerofeachX) throws DividingbyNullException {
        int index = 0;
        do {
            if(args.get(index).equals("(")) {
@@ -759,7 +719,6 @@ public class Function {
                        }
                        space++;
                    }
-
                }
                if (solved) {
                    index = 0;
@@ -780,7 +739,7 @@ public class Function {
         else if(s.equals("-")) s = "-1"; // -x => - => -1 (because -1x is the same as -x)
         return s;
     }
-    private HashMap<Integer, Double> findEachpowerofX(@NotNull List<String> args, HashMap<Integer,Double> powerofeachX) {
+    private HashMap<Integer, Double> findEachpowerofX(@NotNull List<String> args, HashMap<Integer,Double> powerofeachX) throws DividingbyNullException {
         powerofeachX.clear();
         int index = 0;
         do{
@@ -808,7 +767,6 @@ public class Function {
         return powerofeachX;
     }
     public List<Integer> findEachOpeningClause(List<String> args, int index) {
-
         List<Integer> clauseList = new ArrayList<>();
         for(int i=0; i<index; i++) {
             if(args.get(i).equals("(")) {
@@ -817,7 +775,7 @@ public class Function {
         }
         return clauseList;
     }
-    public List<String> productResult(boolean mal,List<String> list, List<String> list2) {
+    public List<String> productResult(boolean mal,List<String> list, List<String> list2) throws DividingbyNullException {
         HashMap<Integer,Double> powerofeachXoflist = new HashMap<>();
         findEachpowerofX(list,powerofeachXoflist);
         HashMap<Integer,Double> powerofeachXoflist2 = new HashMap<>();
@@ -903,5 +861,4 @@ public class Function {
         }
         return res;
     }
-
 }

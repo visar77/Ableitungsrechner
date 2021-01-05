@@ -1,5 +1,6 @@
 package com.ableitungsrechner.GUI;
 
+import com.ableitungsrechner.Math.DividingbyNullException;
 import com.ableitungsrechner.Math.Function;
 
 import javax.swing.*;
@@ -15,7 +16,6 @@ public class Window extends JFrame implements ActionListener{
     private final JTextField functionField = new JTextField(30);
     private final JLabel label = new JLabel();
     private final JLabel result = new JLabel();
-    private ImageIcon logo;
 
     public Window(String title) {
 
@@ -47,7 +47,7 @@ public class Window extends JFrame implements ActionListener{
         label.setBackground(Color.darkGray);
         panel.add(label);
 
-        result.setBounds(width/20,height/2+height/5,width,height/18);
+        result.setBounds(width/20,height/2+height/5,width,height/12);
         panel.add(result);
 
         add(panel);
@@ -63,7 +63,13 @@ public class Window extends JFrame implements ActionListener{
         if(e.getSource() == okButton) {
             Function function = new Function(functionField.getText());
             functionField.setText("");
-            String fxandfdx = "Result: "+function.getDerivative();
+            String fxandfdx = "";
+            try {
+                fxandfdx = "Result: " + function.getDerivative();
+            }catch(Exception ex) {
+                if(ex instanceof DividingbyNullException) fxandfdx = "You can't divide by null";
+                ex.printStackTrace();
+            }
             int scale = 0;
             while(true) {
                 if (fxandfdx.length() > scale*18) {
