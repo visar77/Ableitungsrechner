@@ -270,7 +270,7 @@ public class Function {
         findEachpowerofX(args,powerofeachX);
 
         System.out.println("Nach Potenzrechnung: "+args);
-        ProductResult(args,powerofeachX);
+        ProductResult(args);
 
         findEachpowerofX(args,powerofeachX);
 
@@ -375,7 +375,7 @@ public class Function {
         }while(++index < args.size());
     }
 
-    private void ProductResult (List<String> args, HashMap<Integer,Double> powerofeachX) throws DividingbyNullException {
+    private void ProductResult (List<String> args) throws DividingbyNullException {
         int index = 0;
 
             do {
